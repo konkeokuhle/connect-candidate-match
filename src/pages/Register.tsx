@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   UserIcon, 
-  BuildingOfficeIcon, 
+  BuildingIcon, 
   ChevronRight, 
   Eye, 
   EyeOff,
@@ -107,7 +106,7 @@ const Register = () => {
                 <span>Candidate</span>
               </TabsTrigger>
               <TabsTrigger value="employer" className="flex items-center justify-center space-x-2">
-                <BuildingOfficeIcon className="h-4 w-4" />
+                <BuildingIcon className="h-4 w-4" />
                 <span>Employer</span>
               </TabsTrigger>
             </TabsList>

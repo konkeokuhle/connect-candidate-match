@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BriefcaseIcon, UserIcon, BuildingOfficeIcon, MessageSquareIcon, BellIcon } from 'lucide-react';
+import { BriefcaseIcon, UserIcon, BuildingIcon, MessageSquareIcon, BellIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface LayoutProps {
