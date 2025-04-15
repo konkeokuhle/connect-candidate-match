@@ -22,18 +22,30 @@ const Login = () => {
     
     // In a real app, this would validate credentials against an API
     if (email && password) {
-      toast({
-        title: "Login successful",
-        description: "Welcome back to ConnectMatch!",
-      });
+      // Store auth state in localStorage
+      localStorage.setItem('isLoggedIn', 'true');
       
-      // Redirect to the appropriate dashboard based on the email domain
-      // This is just a mock implementation for demo purposes
+      // Determine user role based on email domain (mock implementation)
+      let userRole: 'candidate' | 'employer';
       if (email.includes('@company') || email.includes('@employer') || email.includes('@business')) {
+        userRole = 'employer';
+        localStorage.setItem('userRole', 'employer');
         navigate('/post-job');
       } else {
+        userRole = 'candidate';
+        localStorage.setItem('userRole', 'candidate');
         navigate('/jobs');
       }
+      
+      // Save user info in localStorage if "Remember me" is checked
+      if (rememberMe) {
+        localStorage.setItem('email', email);
+      }
+      
+      toast({
+        title: "Login successful",
+        description: `Welcome back to ConnectMatch! You're logged in as a ${userRole}.`,
+      });
     } else {
       toast({
         title: "Login failed",

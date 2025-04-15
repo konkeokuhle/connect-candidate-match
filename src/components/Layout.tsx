@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { BriefcaseIcon, UserIcon, BuildingIcon, MessageSquareIcon, BellIcon } from 'lucide-react';
+
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { BriefcaseIcon, UserIcon, BuildingIcon, MessageSquareIcon, BellIcon, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface LayoutProps {
@@ -8,22 +9,26 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  // Mock authentication (would use a real auth system in production)
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-  const [userRole, setUserRole] = React.useState<'candidate' | 'employer' | null>(null);
+  const navigate = useNavigate();
+  // Get authentication state from localStorage
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState<'candidate' | 'employer' | null>(null);
 
-  const handleRoleToggle = () => {
-    if (!isLoggedIn) {
-      setIsLoggedIn(true);
-      setUserRole('candidate');
-    } else {
-      if (userRole === 'candidate') {
-        setUserRole('employer');
-      } else if (userRole === 'employer') {
-        setIsLoggedIn(false);
-        setUserRole(null);
-      }
-    }
+  // Check localStorage for auth state on component mount
+  useEffect(() => {
+    const storedIsLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const storedUserRole = localStorage.getItem('userRole') as 'candidate' | 'employer' | null;
+    
+    setIsLoggedIn(storedIsLoggedIn);
+    setUserRole(storedUserRole);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userRole');
+    setIsLoggedIn(false);
+    setUserRole(null);
+    navigate('/');
   };
 
   return (
@@ -42,9 +47,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="flex items-center gap-3">
             {isLoggedIn ? (
               <>
-                <Button variant="ghost" size="sm" onClick={handleRoleToggle}>
-                  Switch to {userRole === 'candidate' ? 'Employer' : 'Candidate'} View
-                </Button>
+                {userRole && (
+                  <span className="text-sm font-medium text-gray-600 hidden sm:inline-block">
+                    Logged in as {userRole === 'candidate' ? 'Graduate' : 'Employer'}
+                  </span>
+                )}
                 <Button variant="outline" size="sm" className="hidden sm:block" asChild>
                   <Link to="/messages">
                     <MessageSquareIcon className="h-5 w-5 mr-2" />
@@ -65,6 +72,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       <span className="text-sm font-bold">JD</span>
                     </div>
                   </Link>
+                </Button>
+                <Button variant="destructive" size="sm" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
                 </Button>
               </>
             ) : (
@@ -95,6 +106,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <Link to="/profile" className="px-4 py-3 text-sm font-medium text-gray-700 hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary">
                     My Profile
                   </Link>
+                  <Link to="/cv-builder" className="px-4 py-3 text-sm font-medium text-gray-700 hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary">
+                    CV Builder
+                  </Link>
+                  <Link to="/resources" className="px-4 py-3 text-sm font-medium text-gray-700 hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary">
+                    Career Resources
+                  </Link>
                 </>
               ) : (
                 <>
@@ -106,6 +123,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   </Link>
                   <Link to="/manage-jobs" className="px-4 py-3 text-sm font-medium text-gray-700 hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary">
                     Manage Jobs
+                  </Link>
+                  <Link to="/applications-inbox" className="px-4 py-3 text-sm font-medium text-gray-700 hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary">
+                    Applications Inbox
+                  </Link>
+                  <Link to="/analytics" className="px-4 py-3 text-sm font-medium text-gray-700 hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary">
+                    Analytics
                   </Link>
                   <Link to="/company-profile" className="px-4 py-3 text-sm font-medium text-gray-700 hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary">
                     Company Profile

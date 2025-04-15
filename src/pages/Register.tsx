@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
@@ -61,6 +62,9 @@ const Register = () => {
     }
     
     // In a real app, this would call an API to register the user
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userRole', 'candidate');
+    
     toast({
       title: "Registration Successful!",
       description: "Your account has been created. Welcome to ConnectMatch!",
@@ -84,6 +88,9 @@ const Register = () => {
     }
     
     // In a real app, this would call an API to register the employer
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userRole', 'employer');
+    
     toast({
       title: "Registration Successful!",
       description: "Your company account has been created. Welcome to ConnectMatch!",
@@ -103,7 +110,7 @@ const Register = () => {
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="candidate" className="flex items-center justify-center space-x-2">
                 <UserIcon className="h-4 w-4" />
-                <span>Candidate</span>
+                <span>Graduate</span>
               </TabsTrigger>
               <TabsTrigger value="employer" className="flex items-center justify-center space-x-2">
                 <BuildingIcon className="h-4 w-4" />
