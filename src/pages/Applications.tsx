@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
@@ -36,6 +37,7 @@ const mockApplications = [
     interviewDate: null,
     statusUpdateDate: '2025-04-05T14:20:00Z',
     feedback: null,
+    salary: 'R20,000 - R26,000 per month'
   },
   {
     id: 'app-2',
@@ -48,6 +50,7 @@ const mockApplications = [
     interviewDate: '2025-04-20T13:00:00Z',
     statusUpdateDate: '2025-04-02T09:45:00Z',
     feedback: "Your portfolio impressed our design team. We'd like to schedule an interview.",
+    salary: 'R18,000 - R25,000 per month'
   },
   {
     id: 'app-3',
@@ -60,6 +63,7 @@ const mockApplications = [
     interviewDate: null,
     statusUpdateDate: null,
     feedback: null,
+    salary: 'R22,000 - R30,000 per month'
   },
   {
     id: 'app-4',
@@ -72,6 +76,7 @@ const mockApplications = [
     interviewDate: null,
     statusUpdateDate: '2025-03-30T16:10:00Z',
     feedback: 'Thank you for your application. We are looking for candidates with more experience in Node.js.',
+    salary: 'R25,000 - R35,000 per month'
   },
   {
     id: 'app-5',
@@ -84,6 +89,7 @@ const mockApplications = [
     interviewDate: '2025-03-10T11:00:00Z',
     statusUpdateDate: '2025-03-20T15:30:00Z',
     feedback: 'Congratulations! We are pleased to offer you the position.',
+    salary: 'R30,000 - R40,000 per month'
   }
 ];
 
@@ -187,6 +193,17 @@ const Applications = () => {
     }
   };
   
+  // Send message to employer
+  const contactEmployer = (applicationId: string) => {
+    // In a real app, this would navigate to the messaging page with the employer pre-selected
+    navigate('/messages');
+    
+    toast({
+      title: "Opening conversation",
+      description: "Starting a new conversation with the employer.",
+    });
+  };
+  
   return (
     <Layout>
       <div className="app-container py-10">
@@ -254,6 +271,9 @@ const Applications = () => {
                                 <MapPin className="h-4 w-4 mr-1" />
                                 <span>{application.location}</span>
                               </div>
+                              <div className="text-sm text-gray-600 mb-2">
+                                <strong>Salary Range:</strong> {application.salary}
+                              </div>
                             </div>
                             
                             <div className={`${statusInfo.bgColor} ${statusInfo.textColor} flex items-center px-3 py-1 rounded-full self-start md:self-center`}>
@@ -300,7 +320,12 @@ const Applications = () => {
                             </Button>
                             
                             <div className="space-x-2">
-                              <Button variant="outline" size="sm" className="text-brand-primary">
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="text-brand-primary"
+                                onClick={() => contactEmployer(application.id)}
+                              >
                                 <MessageSquare className="mr-1 h-4 w-4" />
                                 Contact Employer
                               </Button>

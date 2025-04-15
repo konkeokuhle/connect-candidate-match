@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
@@ -22,6 +23,8 @@ import {
   Paperclip,
   MoreVertical,
   MessageSquare,
+  Download,
+  FileText,
 } from 'lucide-react';
 
 // Mock conversations data
@@ -52,7 +55,8 @@ const mockConversations = [
       senderId: 'user-1',
       content: 'I have attached my updated CV as requested.',
       sentAt: '2025-04-12T11:20:00Z',
-      read: true
+      read: true,
+      hasAttachment: true
     },
     createdAt: '2025-04-05T16:45:00Z'
   },
@@ -122,6 +126,33 @@ const mockMessages = [
     content: 'Thank you for your application. We would like to invite you for an interview.',
     sentAt: '2025-04-14T14:30:00Z',
     read: false
+  },
+  {
+    id: 'msg-g',
+    conversationId: '2',
+    senderId: 'user-1',
+    content: 'Hello, I saw your job posting for a UX Designer position and I am very interested.',
+    sentAt: '2025-04-05T16:45:00Z',
+    read: true
+  },
+  {
+    id: 'msg-h',
+    conversationId: '2',
+    senderId: 'employer-2',
+    content: 'Hi there! Thanks for your interest. Can you please share your portfolio and CV?',
+    sentAt: '2025-04-06T09:30:00Z',
+    read: true
+  },
+  {
+    id: 'msg-i',
+    conversationId: '2',
+    senderId: 'user-1',
+    content: 'Of course! Here is my updated CV as requested.',
+    sentAt: '2025-04-12T11:20:00Z',
+    read: true,
+    hasAttachment: true,
+    attachmentName: 'John_Doe_CV_2025.pdf',
+    attachmentUrl: '#'
   }
 ];
 
@@ -133,6 +164,7 @@ const Messages = () => {
   const [messages, setMessages] = useState(mockMessages);
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [attachmentName, setAttachmentName] = useState<string | null>(null);
   
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -179,7 +211,7 @@ const Messages = () => {
   };
   
   const handleSendMessage = () => {
-    if (!newMessage.trim() || !selectedConversation) return;
+    if ((!newMessage.trim() && !attachmentName) || !selectedConversation) return;
     
     const newMsg = {
       id: `msg-${Date.now()}`,
@@ -187,7 +219,10 @@ const Messages = () => {
       senderId: currentUserId,
       content: newMessage,
       sentAt: new Date().toISOString(),
-      read: false
+      read: false,
+      hasAttachment: attachmentName !== null,
+      attachmentName: attachmentName,
+      attachmentUrl: '#'
     };
     
     setMessages([...messages, newMsg]);
@@ -201,17 +236,41 @@ const Messages = () => {
               senderId: newMsg.senderId,
               content: newMsg.content,
               sentAt: newMsg.sentAt,
-              read: newMsg.read
+              read: newMsg.read,
+              hasAttachment: newMsg.hasAttachment
             }
           }
         : convo
     ));
     
     setNewMessage('');
+    setAttachmentName(null);
     
     toast({
       title: "Message sent",
       description: "Your message has been sent successfully.",
+    });
+  };
+  
+  const handleFileAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAttachmentName(file.name);
+      toast({
+        title: "File attached",
+        description: `${file.name} is ready to send`,
+      });
+    }
+  };
+  
+  const removeAttachment = () => {
+    setAttachmentName(null);
+  };
+  
+  const downloadAttachment = (attachmentName: string) => {
+    toast({
+      title: "Downloading file",
+      description: `${attachmentName} will be downloaded shortly.`,
     });
   };
   
@@ -290,10 +349,15 @@ const Messages = () => {
                                 {formatDate(conversation.lastMessage?.sentAt || conversation.createdAt)}
                               </span>
                             </div>
-                            <p className={`text-sm truncate ${isUnread ? 'font-semibold' : 'text-gray-600'}`}>
-                              {conversation.lastMessage?.senderId === currentUserId && 'You: '}
-                              {conversation.lastMessage?.content}
-                            </p>
+                            <div className="flex items-center">
+                              {conversation.lastMessage?.hasAttachment && (
+                                <Paperclip className="h-3 w-3 text-gray-400 mr-1 flex-shrink-0" />
+                              )}
+                              <p className={`text-sm truncate ${isUnread ? 'font-semibold' : 'text-gray-600'}`}>
+                                {conversation.lastMessage?.senderId === currentUserId && 'You: '}
+                                {conversation.lastMessage?.content}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -358,6 +422,26 @@ const Messages = () => {
                                 : 'bg-white border border-gray-200 rounded-tl-lg rounded-tr-lg rounded-br-lg'
                             } p-3 shadow-sm`}>
                               <p className="text-sm">{message.content}</p>
+                              {message.hasAttachment && (
+                                <div className={`mt-2 p-2 rounded-md flex items-center justify-between ${
+                                  isOwnMessage ? 'bg-blue-600' : 'bg-gray-100'
+                                }`}>
+                                  <div className="flex items-center">
+                                    <FileText className={`h-4 w-4 mr-2 ${isOwnMessage ? 'text-white' : 'text-gray-500'}`} />
+                                    <span className={`text-sm truncate ${isOwnMessage ? 'text-white' : 'text-gray-700'}`}>
+                                      {message.attachmentName}
+                                    </span>
+                                  </div>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className={isOwnMessage ? 'text-white hover:text-white hover:bg-blue-700' : ''}
+                                    onClick={() => downloadAttachment(message.attachmentName || 'file')}
+                                  >
+                                    <Download className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              )}
                               <div className={`text-xs mt-1 flex items-center ${isOwnMessage ? 'text-brand-light justify-end' : 'text-gray-500'}`}>
                                 <Clock className="h-3 w-3 mr-1" />
                                 {formatDate(message.sentAt)}
@@ -370,10 +454,39 @@ const Messages = () => {
                   </div>
                   
                   <div className="p-4 border-t border-gray-200">
+                    {attachmentName && (
+                      <div className="bg-gray-100 p-2 rounded-md mb-2 flex items-center justify-between">
+                        <div className="flex items-center">
+                          <FileText className="h-4 w-4 text-gray-500 mr-2" />
+                          <span className="text-sm truncate">{attachmentName}</span>
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          onClick={removeAttachment}
+                        >
+                          <Trash2 className="h-4 w-4 text-gray-500" />
+                        </Button>
+                      </div>
+                    )}
+                    
                     <div className="flex space-x-2">
-                      <Button variant="ghost" size="icon" title="Attach File">
-                        <Paperclip className="h-5 w-5" />
-                      </Button>
+                      <div className="relative">
+                        <input
+                          type="file"
+                          id="file-upload"
+                          className="hidden"
+                          onChange={handleFileAttachment}
+                        />
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          title="Attach File"
+                          onClick={() => document.getElementById('file-upload')?.click()}
+                        >
+                          <Paperclip className="h-5 w-5" />
+                        </Button>
+                      </div>
                       <Textarea
                         placeholder="Type your message..."
                         className="min-h-[56px] flex-1 resize-none"
@@ -386,7 +499,7 @@ const Messages = () => {
                           }
                         }}
                       />
-                      <Button className="h-full" onClick={handleSendMessage} disabled={!newMessage.trim()}>
+                      <Button className="h-full" onClick={handleSendMessage} disabled={!newMessage.trim() && !attachmentName}>
                         <Send className="h-5 w-5" />
                       </Button>
                     </div>

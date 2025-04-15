@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
@@ -64,6 +63,8 @@ const Register = () => {
     // In a real app, this would call an API to register the user
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('userRole', 'candidate');
+    localStorage.setItem('userName', formData.candidateFullName);
+    localStorage.setItem('userEmail', formData.candidateEmail);
     
     toast({
       title: "Registration Successful!",
@@ -90,6 +91,9 @@ const Register = () => {
     // In a real app, this would call an API to register the employer
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('userRole', 'employer');
+    localStorage.setItem('companyName', formData.companyName);
+    localStorage.setItem('contactName', formData.contactName);
+    localStorage.setItem('userEmail', formData.employerEmail);
     
     toast({
       title: "Registration Successful!",
@@ -97,7 +101,7 @@ const Register = () => {
     });
     
     // Navigate to the dashboard or profile completion page
-    navigate('/company-profile');
+    navigate('/employer-dashboard');
   };
   
   return (

@@ -19,6 +19,8 @@ import CVBuilder from "./pages/CVBuilder";
 import Messages from "./pages/Messages";
 import Applications from "./pages/Applications";
 import PostJob from "./pages/PostJob";
+import EmployerDashboard from "./pages/EmployerDashboard";
+import ApplicationsInbox from "./pages/ApplicationsInbox";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +44,8 @@ const App = () => (
         <Route path="/messages" element={<Messages />} />
         <Route path="/applications" element={<Applications />} />
         <Route path="/post-job" element={<PostJob />} />
+        <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+        <Route path="/applications-inbox" element={<ApplicationsInbox />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
