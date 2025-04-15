@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
@@ -96,7 +95,7 @@ const mockMessages = [
     id: 'msg-c',
     conversationId: '1',
     senderId: 'user-1',
-    content: 'I have 2 years of experience with React, including building several web applications. I've also worked with Redux for state management and have experience with TypeScript.',
+    content: "I have 2 years of experience with React, including building several web applications. I've also worked with Redux for state management and have experience with TypeScript.",
     sentAt: '2025-04-10T11:15:00Z',
     read: true
   },
@@ -104,7 +103,7 @@ const mockMessages = [
     id: 'msg-d',
     conversationId: '1',
     senderId: 'employer-1',
-    content: 'That sounds great! I'd like to see some examples of your work. Could you share your portfolio or GitHub profile?',
+    content: "That sounds great! I'd like to see some examples of your work. Could you share your portfolio or GitHub profile?",
     sentAt: '2025-04-11T09:45:00Z',
     read: true
   },
@@ -112,7 +111,7 @@ const mockMessages = [
     id: 'msg-e',
     conversationId: '1',
     senderId: 'user-1',
-    content: 'Sure! Here's my GitHub: github.com/johndoe123. You can also check my portfolio at johndoe.dev where I've showcased my recent projects.',
+    content: "Sure! Here's my GitHub: github.com/johndoe123. You can also check my portfolio at johndoe.dev where I've showcased my recent projects.",
     sentAt: '2025-04-11T10:20:00Z',
     read: true
   },
@@ -135,7 +134,6 @@ const Messages = () => {
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   
-  // Check authentication
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     
@@ -149,28 +147,23 @@ const Messages = () => {
     }
   }, [navigate, toast]);
   
-  // Get current user role
   const userRole = localStorage.getItem('userRole') as 'candidate' | 'employer' | null;
   const currentUserId = 'user-1'; // In a real app, this would come from auth
   
-  // Filter conversations by search term
   const filteredConversations = conversations.filter(convo => {
     const otherParticipant = convo.participants.find(p => p.id !== currentUserId);
     return otherParticipant?.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
   
-  // Get messages for selected conversation
   const currentMessages = messages.filter(
     msg => msg.conversationId === selectedConversation
   );
   
-  // Get the other participant in the conversation
   const getOtherParticipant = (conversationId: string) => {
     const conversation = conversations.find(c => c.id === conversationId);
     return conversation?.participants.find(p => p.id !== currentUserId);
   };
   
-  // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -185,7 +178,6 @@ const Messages = () => {
     }
   };
   
-  // Send a new message
   const handleSendMessage = () => {
     if (!newMessage.trim() || !selectedConversation) return;
     
@@ -198,10 +190,8 @@ const Messages = () => {
       read: false
     };
     
-    // Update messages
     setMessages([...messages, newMsg]);
     
-    // Update conversation with last message
     setConversations(conversations.map(convo => 
       convo.id === selectedConversation 
         ? {
@@ -217,7 +207,6 @@ const Messages = () => {
         : convo
     ));
     
-    // Clear input
     setNewMessage('');
     
     toast({
@@ -226,9 +215,7 @@ const Messages = () => {
     });
   };
   
-  // Start a new conversation
   const startNewConversation = () => {
-    // In a real app, this would open a modal to select a recipient
     toast({
       title: "Start a new conversation",
       description: "Feature coming soon!",
@@ -240,7 +227,6 @@ const Messages = () => {
       <div className="app-container py-6">
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-3 h-[calc(100vh-250px)] min-h-[500px]">
-            {/* Conversations List */}
             <div className="border-r border-gray-200">
               <div className="p-4 border-b border-gray-200">
                 <div className="flex items-center justify-between mb-4">
@@ -321,11 +307,9 @@ const Messages = () => {
               </div>
             </div>
             
-            {/* Message Thread */}
             <div className="col-span-2 flex flex-col">
               {selectedConversation ? (
                 <>
-                  {/* Conversation Header */}
                   <div className="p-4 border-b border-gray-200 flex justify-between items-center">
                     <div className="flex items-center">
                       {getOtherParticipant(selectedConversation)?.role === 'employer' ? (
@@ -362,7 +346,6 @@ const Messages = () => {
                     </div>
                   </div>
                   
-                  {/* Messages */}
                   <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
                     <div className="space-y-4">
                       {currentMessages.map((message) => {
@@ -386,7 +369,6 @@ const Messages = () => {
                     </div>
                   </div>
                   
-                  {/* Message Input */}
                   <div className="p-4 border-t border-gray-200">
                     <div className="flex space-x-2">
                       <Button variant="ghost" size="icon" title="Attach File">

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
@@ -48,7 +47,7 @@ const mockApplications = [
     status: 'shortlisted',
     interviewDate: '2025-04-20T13:00:00Z',
     statusUpdateDate: '2025-04-02T09:45:00Z',
-    feedback: 'Your portfolio impressed our design team. We'd like to schedule an interview.',
+    feedback: "Your portfolio impressed our design team. We'd like to schedule an interview.",
   },
   {
     id: 'app-3',
