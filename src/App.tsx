@@ -10,9 +10,10 @@ import JobDetail from "./pages/JobDetail";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProfileCreation from "./pages/ProfileCreation";
-import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
+import Privacy from "./pages/Privacy";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
         <Route path="/profile" element={<ProfileCreation />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
+        <Route path="/privacy" element={<Privacy />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

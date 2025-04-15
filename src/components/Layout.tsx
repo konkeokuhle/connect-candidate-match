@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BriefcaseIcon, UserIcon, BuildingIcon, MessageSquareIcon, BellIcon } from 'lucide-react';
@@ -32,8 +31,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
         <div className="app-container flex justify-between items-center py-4">
-          <Link to="/" className="flex items-center gap-2">
-            <BriefcaseIcon className="h-8 w-8 text-brand-primary" />
+          <Link to="/" className="flex items-center gap-4">
+            <img 
+              src="/lovable-uploads/c32f1a0c-4f4b-4425-90a6-47366029132f.png" 
+              alt="DUT Logo" 
+              className="h-10 w-auto"
+            />
             <span className="text-xl font-bold text-brand-primary">ConnectMatch</span>
           </Link>
           <div className="flex items-center gap-3">
